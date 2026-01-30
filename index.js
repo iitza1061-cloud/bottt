@@ -1,3 +1,15 @@
+const express = require('express')
+const app = express()
+
+const PORT = process.env.PORT || 3000
+
+app.get('/', (req, res) => {
+  res.send('LYAN BOT ONLINE 💛🐣')
+})
+
+app.listen(PORT, () => {
+  console.log('🌐 Servidor Express activo en puerto', PORT)
+})
 const {
   default: makeWASocket,
   useMultiFileAuthState,
@@ -552,5 +564,6 @@ if (text.startsWith('.') && comandosVentas.includes(cmd)) {
     }
   })
 }
+
 
 iniciarBot()
