@@ -540,17 +540,32 @@ if (text.startsWith('.') && comandosVentas.includes(cmd)) {
 
   })
 
-  sock.ev.on('connection.update', (update) => {
-    if (update.connection === 'open') {
-      console.log('💛 LYAN BOT CONECTADO 💛')
+  const qrcode = require('qrcode-terminal')
+
+sock.ev.on('connection.update', (update) => {
+  const { connection, lastDisconnect, qr } = update
+
+  if (qr) {
+    console.log('📲 ESCANEA ESTE QR (caduca rápido):')
+    qrcode.generate(qr, { small: true })
+  }
+
+  if (connection === 'open') {
+    console.log('✅ WHATSAPP CONECTADO CORRECTAMENTE')
+  }
+
+  if (connection === 'close') {
+    const code = lastDisconnect?.error?.output?.statusCode
+    console.log('❌ WhatsApp desconectado:', code)
+
+    if (code !== DisconnectReason.loggedOut) {
+      console.log('🔄 Reintentando en 10 segundos…')
+      setTimeout(() => iniciarBot(), 10000)
+    } else {
+      console.log('⚠️ Sesión cerrada. Se necesita nuevo QR')
     }
-    if (
-      update.connection === 'close' &&
-      update.lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut
-    ) {
-      iniciarBot()
-    }
-  })
+  }
+})
 }
 // ================= EXPRESS (SECUNDARIO) =================
 const express = require('express')
@@ -569,3 +584,4 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
