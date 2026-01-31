@@ -7,9 +7,21 @@ const P = require('pino')
 const fs = require('fs')
 
 // =================== CONFIG ===================
-const DB_PATH = './data/mensajes.json'
-if (!fs.existsSync('./data')) fs.mkdirSync('./data')
-if (!fs.existsSync(DB_PATH)) fs.writeFileSync(DB_PATH, JSON.stringify({}))
+function getDBPath(groupId) {
+  return `./data/${groupId}.json`
+}
+
+function getDB(groupId) {
+  if (!fs.existsSync('./data')) fs.mkdirSync('./data')
+  const path = getDBPath(groupId)
+  if (!fs.existsSync(path)) fs.writeFileSync(path, JSON.stringify({}))
+  return JSON.parse(fs.readFileSync(path))
+}
+
+function saveDB(groupId, data) {
+  fs.writeFileSync(getDBPath(groupId), JSON.stringify(data, null, 2))
+}
+
 
 // =================== MENÚS ===================
 const MENU_PRINCIPAL = `
@@ -291,7 +303,7 @@ sock.ev.on('group-participants.update', async (update) => {
     const { id, participants, action } = update
     if (action !== 'add') return
 
-    const db = JSON.parse(fs.readFileSync(DB_PATH))
+const db = getDB(from)
     if (!db.welcome_on) return
 
     const metadata = await sock.groupMetadata(id)
@@ -321,7 +333,7 @@ sock.ev.on('group-participants.update', async (update) => {
       msg.message.extendedTextMessage?.text ||
       ''
 
-    const db = JSON.parse(fs.readFileSync(DB_PATH))
+const db = getDB(from)
 // ===== INFO DEL GRUPO =====
 const metadata = await sock.groupMetadata(from)
 const participants = metadata.participants
@@ -333,14 +345,14 @@ const isAdmin = participants.some(
 if (text === '.on welcome') {
   if (!isAdmin) return sock.sendMessage(from, { text: '💛 Solo admins 🐣' })
   db.welcome_on = true
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2))
+saveDB(from, db)
   return sock.sendMessage(from, { text: '💛🐣 Welcome ACTIVADO' })
 }
 
 if (text === '.off welcome') {
   if (!isAdmin) return sock.sendMessage(from, { text: '💛 Solo admins 🐣' })
   db.welcome_on = false
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2))
+saveDB(from, db)
   return sock.sendMessage(from, { text: '💛🐣 Welcome DESACTIVADO' })
 }
     if (text === '.menu') {
@@ -502,7 +514,7 @@ if (text === '.n' || text.startsWith('.n ')) {
   }
 
   db[name] = value
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2))
+saveDB(from, db)
 
   return sock.sendMessage(from, {
     text: `💛🌟 *${name}* actualizado correctamente 🐣`
@@ -589,6 +601,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
