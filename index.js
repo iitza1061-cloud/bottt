@@ -540,16 +540,20 @@ if (text.startsWith('.') && comandosVentas.includes(cmd)) {
 
   })
 
-  const qrcode = require('qrcode')
+  const QRCode = require('qrcode')
 
-sock.ev.on('connection.update', (update) => {
+sock.ev.on('connection.update', async (update) => {
   const { connection, lastDisconnect, qr } = update
 
   if (qr) {
-  const qrImage = await QRCode.toDataURL(qr)
-  console.log('📲 ESCANEA ESTE QR (cópialo en el navegador):')
-  console.log(qrImage)
-}
+    try {
+      const qrImage = await QRCode.toDataURL(qr)
+      console.log('📲 COPIA ESTE QR EN EL NAVEGADOR:')
+      console.log(qrImage)
+    } catch (e) {
+      console.error('❌ Error generando QR:', e)
+    }
+  }
 
   if (connection === 'open') {
     console.log('✅ WHATSAPP CONECTADO CORRECTAMENTE')
@@ -563,7 +567,7 @@ sock.ev.on('connection.update', (update) => {
       console.log('🔄 Reintentando en 10 segundos…')
       setTimeout(() => iniciarBot(), 10000)
     } else {
-      console.log('⚠️ Sesión cerrada. Se necesita nuevo QR')
+      console.log('⚠️ Sesión cerrada, se necesita nuevo QR')
     }
   }
 })
@@ -585,5 +589,6 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
