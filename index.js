@@ -540,15 +540,16 @@ if (text.startsWith('.') && comandosVentas.includes(cmd)) {
 
   })
 
-  const qrcode = require('qrcode-terminal')
+  const qrcode = require('qrcode')
 
 sock.ev.on('connection.update', (update) => {
   const { connection, lastDisconnect, qr } = update
 
   if (qr) {
-    console.log('📲 ESCANEA ESTE QR (caduca rápido):')
-    qrcode.generate(qr, { small: true })
-  }
+  const qrImage = await QRCode.toDataURL(qr)
+  console.log('📲 ESCANEA ESTE QR (cópialo en el navegador):')
+  console.log(qrImage)
+}
 
   if (connection === 'open') {
     console.log('✅ WHATSAPP CONECTADO CORRECTAMENTE')
@@ -584,4 +585,5 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
