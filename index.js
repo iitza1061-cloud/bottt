@@ -1,18 +1,3 @@
-const express = require('express')
-const app = express()
-
-const PORT = process.env.PORT || 8080
-
-app.get('/', (req, res) => {
-  res.send('LYAN BOT ONLINE 💛🐣')
-})
-
-app.listen(PORT, () => {
-  console.log('🌐 Servidor Express activo en puerto', PORT)
-})
-setInterval(() => {
-  console.log('🔁 keep alive')
-}, 1000 * 60 * 5)
 const {
   default: makeWASocket,
   useMultiFileAuthState,
@@ -556,20 +541,31 @@ if (text.startsWith('.') && comandosVentas.includes(cmd)) {
   })
 
   sock.ev.on('connection.update', (update) => {
-  const { connection, lastDisconnect } = update
-
-  if (connection === 'open') {
-    console.log('💛 LYAN BOT CONECTADO 💛')
-  }
-
-  if (connection === 'close') {
-    const reason = lastDisconnect?.error?.output?.statusCode
-
-    if (reason === DisconnectReason.loggedOut) {
-      console.log('❌ Sesión cerrada, escanea QR otra vez')
-    } else {
-      console.log('🔄 Reconectando en 10 segundos...')
-      setTimeout(() => iniciarBot(), 10000)
+    if (update.connection === 'open') {
+      console.log('💛 LYAN BOT CONECTADO 💛')
     }
-  }
+    if (
+      update.connection === 'close' &&
+      update.lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut
+    ) {
+      iniciarBot()
+    }
+  })
+}
+// ================= EXPRESS (SECUNDARIO) =================
+const express = require('express')
+const app = express()
+const PORT = process.env.PORT || 8080
+
+app.get('/', (_, res) => res.send('LYAN BOT ONLINE 💛🐣'))
+app.listen(PORT, () =>
+  console.log('🌐 Express vivo en puerto', PORT)
+)
+process.on('uncaughtException', err => {
+  console.error('❌ uncaughtException:', err)
 })
+
+process.on('unhandledRejection', err => {
+  console.error('❌ unhandledRejection:', err)
+})
+iniciarBot()
