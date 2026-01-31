@@ -303,7 +303,7 @@ sock.ev.on('group-participants.update', async (update) => {
     const { id, participants, action } = update
     if (action !== 'add') return
 
-const db = getDB(from)
+const db = getDB(id)
     if (!db.welcome_on) return
 
     const metadata = await sock.groupMetadata(id)
@@ -601,6 +601,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
