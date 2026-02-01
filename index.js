@@ -1,4 +1,4 @@
-como va? const {
+const {
   default: makeWASocket,
   useMultiFileAuthState,
   DisconnectReason
@@ -741,3 +741,4 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
