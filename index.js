@@ -1,4 +1,4 @@
-const {
+como va? const {
   default: makeWASocket,
   useMultiFileAuthState,
   DisconnectReason
@@ -42,7 +42,6 @@ un total orden en tus *GRUPOS*
 *┊* 🌟 *.menuventas2*
 *┊* 🌟 *.menufreefire*
 *┊* 🌟 *.menustickers*
-*┊* 🌟 *.menuherramientas*
 *╰┈┈┈┈┈┈┈┈┈⊰*
 
 ══════════════════════
@@ -54,7 +53,7 @@ Todos los productos se configuran con:
 *╭┈┈⊰* 🌟 VENTAS 🌟
 *┊* 💛 *.disney*
 *┊* 💛 *.actas*
-*┊* 💛 *.ado*
+*┊* 💛 *.seguidores*
 *┊* 💛 *.adicionales*
 *┊* 💛 *.alimentos*
 *┊* 💛 *.autobus*
@@ -168,7 +167,7 @@ Aquí podrás ver todos los productos disponibles
 *╭┈┈⊰* 🌟 PRODUCTOS 🌟
 *┊* 💛 *.disney*
 *┊* 💛 *.actas*
-*┊* 💛 *.ado*
+*┊* 💛 *.seguidores*
 *┊* 💛 *.adicionales*
 *┊* 💛 *.alimentos*
 *┊* 💛 *.autobus*
@@ -301,21 +300,30 @@ sock.ev.on('group-participants.update', async (update) => {
 
   try {
     const { id, participants, action } = update
-    if (action !== 'add') return
+  const db = getDB(id)
 
-const db = getDB(id)
-    if (!db.welcome_on) return
+// ===== WELCOME =====
+if (action === 'add' && db.welcome_on) {
+  const metadata = await sock.groupMetadata(id)
+  const texto = db.welcome || metadata.desc || '💛🐣 Bienvenido'
+  for (const user of participants) {
+    await sock.sendMessage(id,{
+      text: texto,
+      mentions: [user]
+    })
+  }
+}
 
-    const metadata = await sock.groupMetadata(id)
-    const descripcion = metadata.desc || '💛🐣 Bienvenido al grupo'
-    const textoWelcome = db.welcome || descripcion
+// ===== BYE =====
+if (action === 'remove' && db.bye) {
+  for (const user of participants) {
+    await sock.sendMessage(id,{
+      text: db.bye,
+      mentions: [user]
+    })
+  }
+}
 
-    for (const user of participants) {
-      await sock.sendMessage(id, {
-        text: textoWelcome,
-        mentions: [user]
-      })
-    }
   } catch (err) {
     console.log('❌ Error Welcome:', err)
   }
@@ -341,6 +349,66 @@ const sender = msg.key.participant || msg.key.remoteJid
 const isAdmin = participants.some(
   p => p.id === sender && p.admin
 )
+    db.adminOnly = db.adminOnly ?? false
+    db.antilink = db.antilink ?? false
+    
+// ===== MODO ADMIN =====
+if (db.adminOnly && !isAdmin && text.startsWith('.')) {
+  return
+}
+
+if (text === '.on modoadmin') {
+  if (!isAdmin) return
+  db.adminOnly = true
+  saveDB(from, db)
+  return sock.sendMessage(from,{ text:'🔐 Modo admin ACTIVADO' })
+}
+// ===== ANTI LINK ON / OFF =====
+if (text === '.on antilink') {
+  if (!isAdmin) return
+  db.antilink = true
+  saveDB(from, db)
+  return sock.sendMessage(from,{ text:'🔗 AntiLink ACTIVADO' })
+}
+
+if (text === '.off antilink') {
+  if (!isAdmin) return
+  db.antilink = false
+  saveDB(from, db)
+  return sock.sendMessage(from,{ text:'🔗 AntiLink DESACTIVADO' })
+}
+if (text === '.off modoadmin') {
+  if (!isAdmin) return
+  db.adminOnly = false
+  saveDB(from, db)
+  return sock.sendMessage(from,{ text:'🔓 Modo admin DESACTIVADO' })
+}
+    // ===== SISTEMA MUTE =====
+db.muted = db.muted || []
+
+if (db.muted.includes(sender)) {
+  await sock.sendMessage(from, { delete: msg.key })
+  return
+}
+    // ===== COMANDOS MUTE =====
+if (text === '.mute') {
+  if (!isAdmin) return sock.sendMessage(from,{text:'❌ Solo admins'})
+  const user = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+  if (!user) return sock.sendMessage(from,{text:'❌ Menciona a alguien'})
+  if (!db.muted.includes(user)) db.muted.push(user)
+  saveDB(from, db)
+  return sock.sendMessage(from,{text:'🔇 Usuario muteado'})
+}
+
+if (text === '.unmute') {
+  if (!isAdmin) return sock.sendMessage(from,{text:'❌ Solo admins'})
+  const user = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+  if (!user) return sock.sendMessage(from,{text:'❌ Menciona a alguien'})
+  db.muted = db.muted.filter(u => u !== user)
+  saveDB(from, db)
+  return sock.sendMessage(from,{text:'🔊 Usuario desmuteado'})
+}
+    
 // ===== WELCOME ON / OFF =====
 if (text === '.on welcome') {
   if (!isAdmin) return sock.sendMessage(from, { text: '💛 Solo admins 🐣' })
@@ -355,6 +423,27 @@ if (text === '.off welcome') {
 saveDB(from, db)
   return sock.sendMessage(from, { text: '💛🐣 Welcome DESACTIVADO' })
 }
+    if (text === '.off bye') {
+  if (!isAdmin) return
+  db.bye = null
+  saveDB(from, db)
+  return sock.sendMessage(from,{ text:'👋 Bye DESACTIVADO' })
+}
+    // ===== SET WELCOME =====
+if (text.startsWith('.setwelcome ')) {
+  if (!isAdmin) return
+  db.welcome = text.replace('.setwelcome','').trim()
+  saveDB(from, db)
+  return sock.sendMessage(from,{ text:'🎀 Welcome actualizado' })
+}
+    // ===== SET BYE =====
+if (text.startsWith('.setbye ')) {
+  if (!isAdmin) return
+  db.bye = text.replace('.setbye','').trim()
+  saveDB(from, db)
+  return sock.sendMessage(from,{ text:'🎀 Bye actualizado' })
+}
+    
     if (text === '.menu') {
       await sock.sendMessage(from, { react: { text: '🐣', key: msg.key } })
       return sock.sendMessage(from, { text: MENU_PRINCIPAL })
@@ -371,6 +460,27 @@ saveDB(from, db)
     if (text === '.menuventas2') {
       return sock.sendMessage(from, { text: MENU_VENTAS2 })
     }
+    if (text === '.menufreefire') {
+  return sock.sendMessage(from,{
+    text:'🔥 MENÚ FREE FIRE\n\n• Diamantes\n• Pases\n• Recargas'
+  })
+}
+
+if (text === '.menustickers') {
+  return sock.sendMessage(from,{
+    text:'🧷 MENÚ STICKERS\n\n• Stickers personalizados\n• Packs\n• Logos'
+  })
+}
+    // ===== LINK DEL GRUPO =====
+if (text === '.link' || text === '.damelink') {
+  if (!isAdmin) {
+    return sock.sendMessage(from,{ text:'❌ Solo admins' })
+  }
+  const code = await sock.groupInviteCode(from)
+  return sock.sendMessage(from,{
+    text:`🔗 Link del grupo:\nhttps://chat.whatsapp.com/${code}`
+  })
+}
     if (text === '.grupo cerrar') {
   if (!isAdmin) {
     return sock.sendMessage(from, {
@@ -450,32 +560,43 @@ if (text.startsWith('.abrir ') || text.startsWith('.cerrar ')) {
 
   return
 }
-if (text.startsWith('.kick')) {
-  if (!isAdmin) {
-    return sock.sendMessage(from, {
-      text: '💛🐣 Solo administradores pueden usar *.kick*'
-    })
+    // ===== PROMOTE =====
+if (text === '.promote') {
+  if (!isAdmin) return
+  const user = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+  if (!user) {
+    return sock.sendMessage(from,{ text:'❌ Menciona a alguien' })
   }
-
-  if (!msg.message.extendedTextMessage?.contextInfo?.mentionedJid) {
-    return sock.sendMessage(from, {
-      text: '❌ Menciona a alguien para expulsar\nEj: *.kick @usuario*'
-    })
-  }
-
-  const userKick = msg.message.extendedTextMessage.contextInfo.mentionedJid[0]
-
-  try {
-    await sock.groupParticipantsUpdate(from, [userKick], 'remove')
-    await sock.sendMessage(from, {
-      text: '💛🐣 Usuario expulsado correctamente 🌟'
-    })
-  } catch (e) {
-    await sock.sendMessage(from, {
-      text: '❌ No pude expulsar al usuario'
-    })
-  }
+  await sock.groupParticipantsUpdate(from,[user],'promote')
+  return sock.sendMessage(from,{ text:'🎀 Usuario promovido a admin' })
 }
+
+// ===== DEMOTE =====
+if (text === '.demote') {
+  if (!isAdmin) return
+  const user = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+  if (!user) {
+    return sock.sendMessage(from,{ text:'❌ Menciona a alguien' })
+  }
+  await sock.groupParticipantsUpdate(from,[user],'demote')
+  return sock.sendMessage(from,{ text:'🎀 Admin removido' })
+}
+
+    
+if (text.startsWith('.kick')) {
+  if (!isAdmin) return sock.sendMessage(from,{ text:'❌ Solo admins' })
+
+  const user = msg.message.extendedTextMessage?.contextInfo?.mentionedJid?.[0]
+  if (!user) {
+    return sock.sendMessage(from,{
+      text:'❌ Menciona a alguien\nEj: .kick @user'
+    })
+  }
+
+  await sock.groupParticipantsUpdate(from,[user],'remove')
+  return sock.sendMessage(from,{ text:'💛🐣 Usuario expulsado correctamente' })
+}
+
 
     if (text === '.ping') {
       return sock.sendMessage(from, { text: '💛 LYAN BOT ACTIVO 💛' })
@@ -496,6 +617,25 @@ if (text === '.n' || text.startsWith('.n ')) {
     mentions
   })
   return
+}
+    // ===== NOTIFY / TAGALL =====
+if (text === '.notify' || text === '.tagall') {
+  if (!isAdmin) return
+  const mentions = participants.map(p => p.id)
+  await sock.sendMessage(from,{
+    text:'📣 Atención grupo',
+    mentions
+  })
+  return
+}
+    // ===== TODOS =====
+if (text === '.todos') {
+  if (!isAdmin) return
+  const mentions = participants.map(p => p.id)
+  return sock.sendMessage(from,{
+    text:'👥 Atención a todos',
+    mentions
+  })
 }
     if (text.startsWith('.set')) {
   if (!isAdmin) {
@@ -536,7 +676,7 @@ const comandosVentas = [
   'reembolsos','reglas','reportes','rfc','robux','servicios','seguros',
   'spotify','stock','stock2','stock3','stock4','stock5','stock6','stock7',
   'stock8','stock9','stock10','shein','tanda','tramites','universidad',
-  'vigencia','vuelos','vix','universal','youtube','web'
+  'vigencia','vuelos','vix','universal','youtube','web', 'seguidores'
 ]
 
 if (text.startsWith('.') && comandosVentas.includes(cmd)) {
@@ -601,8 +741,3 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
-
-
-
-
-
