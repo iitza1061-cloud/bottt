@@ -373,6 +373,7 @@ db.adminOnly = db.adminOnly ?? false
 db.antilink = db.antilink ?? false
 db.welcome_on = db.welcome_on ?? false
 db.muted = db.muted || []
+db.bye_on = db.bye_on ?? false
 
 // ===== INFO DEL GRUPO =====
 const metadata = await sock.groupMetadata(from)
@@ -471,11 +472,19 @@ if (text === '.off welcome') {
 saveDB(from, db)
   return sock.sendMessage(from, { text: '💛🐣 Welcome DESACTIVADO' })
 }
-    if (text === '.off bye') {
-  if (!isAdmin) return
-  db.bye = null
+    // ===== BYE ON / OFF =====
+if (text === '.on bye') {
+  if (!isAdmin) return sock.sendMessage(from, { text: '💛 Solo admins 🐣' })
+  db.bye_on = true
   saveDB(from, db)
-  return sock.sendMessage(from,{ text:'👋 Bye DESACTIVADO' })
+  return sock.sendMessage(from, { text: '👋 Bye ACTIVADO' })
+}
+
+if (text === '.off bye') {
+  if (!isAdmin) return sock.sendMessage(from, { text: '💛 Solo admins 🐣' })
+  db.bye_on = false
+  saveDB(from, db)
+  return sock.sendMessage(from, { text: '👋 Bye DESACTIVADO' })
 }
     // ===== SET WELCOME =====
 if (text.startsWith('.setwelcome ')) {
@@ -790,6 +799,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
