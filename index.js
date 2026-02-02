@@ -342,17 +342,37 @@ if (action === 'remove' && db.bye) {
       ''
 
 const db = getDB(from)
+    // 🧠 Valores por defecto del grupo
+db.adminOnly = db.adminOnly ?? false
+db.antilink = db.antilink ?? false
+db.welcome_on = db.welcome_on ?? false
+db.muted = db.muted || []
+
 // ===== INFO DEL GRUPO =====
 const metadata = await sock.groupMetadata(from)
 const participants = metadata.participants
 const sender = msg.key.participant || msg.key.remoteJid
+// 🔐 DETECTAR ADMIN CORRECTAMENTE (admin + creador)
 const isAdmin = participants.some(
-  p => p.id === sender && p.admin
+  p =>
+    p.id === sender &&
+    (p.admin === 'admin' || p.admin === 'superadmin')
 )
+
     db.adminOnly = db.adminOnly ?? false
     db.antilink = db.antilink ?? false
     
 // ===== MODO ADMIN =====
+    // 🚫 ANTI-LINK
+if (
+  db.antilink &&
+  !isAdmin &&
+  /(https?:\/\/|chat.whatsapp.com)/i.test(text)
+) {
+  await sock.sendMessage(from, { delete: msg.key })
+  return
+}
+
 if (db.adminOnly && !isAdmin && text.startsWith('.')) {
   return
 }
@@ -514,7 +534,7 @@ if (text.startsWith('.abrir ') || text.startsWith('.cerrar ')) {
   }
 
   const accion = text.startsWith('.abrir') ? 'abrir' : 'cerrar'
-  const horaTexto = text.replace(`.${accion}`, '').trim()
+const horaTexto = text.split(' ')[1]
 
   const match = horaTexto.match(/^(\d{1,2})(:(\d{2}))?\s*(am|pm)?$/i)
   if (!match) {
@@ -741,4 +761,5 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
