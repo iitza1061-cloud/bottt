@@ -329,12 +329,18 @@ sock.ev.on('group-participants.update', async (update) => {
           foto = await sock.profilePictureUrl(jid, 'image')
         } catch {}
 
-        await sock.sendMessage(id, {
-          image: foto ? { url: foto } : undefined,
-          caption: text,
-          mentions: [jid]
-        })
-      }
+       if (foto) {
+  await sock.sendMessage(id, {
+    image: { url: foto },
+    caption: text,
+    mentions: [jid]
+  })
+} else {
+  await sock.sendMessage(id, {
+    text,
+    mentions: [jid]
+  })
+}
 
       // ===== BYE =====
       if (action === 'remove' && typeof db.bye === 'string') {
@@ -784,6 +790,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
