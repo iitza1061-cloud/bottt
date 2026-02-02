@@ -341,7 +341,7 @@ sock.ev.on('group-participants.update', async (update) => {
     mentions: [jid]
   })
 }
-
+}
       // ===== BYE =====
       if (action === 'remove' && typeof db.bye === 'string') {
         await sock.sendMessage(id, {
@@ -790,6 +790,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
