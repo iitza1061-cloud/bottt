@@ -299,14 +299,16 @@ sock.ev.on('group-participants.update', async (update) => {
   console.log('🔥 EVENTO PARTICIPANTS:', update)
 
   try {
-    const { id, participants, action } = update
+const id = update.id
+const action = update.action
+const users = update.participants || []
   const db = getDB(id)
 
 // ===== WELCOME =====
 if (action === 'add' && db.welcome_on) {
   const metadata = await sock.groupMetadata(id)
   const texto = db.welcome || metadata.desc || '💛🐣 Bienvenido'
-  for (const user of participants) {
+for (const user of users) {
     await sock.sendMessage(id,{
       text: texto,
       mentions: [user]
@@ -316,13 +318,14 @@ if (action === 'add' && db.welcome_on) {
 
 // ===== BYE =====
 if (action === 'remove' && db.bye) {
-  for (const user of participants) {
+  for (const user of users) {
     await sock.sendMessage(id,{
       text: db.bye,
       mentions: [user]
     })
   }
 }
+
 
   } catch (err) {
     console.log('❌ Error Welcome:', err)
@@ -362,18 +365,20 @@ const isAdmin = participants.some(
     db.adminOnly = db.adminOnly ?? false
     db.antilink = db.antilink ?? false
     
+
+
+if (db.adminOnly && !isAdmin && text.startsWith('.')) {
+  return
+}
 // ===== MODO ADMIN =====
-    // 🚫 ANTI-LINK
+// 🚫 ANTI-LINK (no borra admins ni bot)
 if (
   db.antilink &&
   !isAdmin &&
-  /(https?:\/\/|chat.whatsapp.com)/i.test(text)
+  sender !== sock.user.id &&
+  /(https?:\/\/|chat\.whatsapp\.com)/i.test(text)
 ) {
   await sock.sendMessage(from, { delete: msg.key })
-  return
-}
-
-if (db.adminOnly && !isAdmin && text.startsWith('.')) {
   return
 }
 
@@ -534,7 +539,7 @@ if (text.startsWith('.abrir ') || text.startsWith('.cerrar ')) {
   }
 
   const accion = text.startsWith('.abrir') ? 'abrir' : 'cerrar'
-const horaTexto = text.split(' ')[1]
+const horaTexto = text.split(' ').slice(1).join('').trim()
 
   const match = horaTexto.match(/^(\d{1,2})(:(\d{2}))?\s*(am|pm)?$/i)
   if (!match) {
@@ -681,7 +686,8 @@ saveDB(from, db)
   })
 }
 
-   const cmd = text.slice(1)
+if (!text.startsWith('.')) return
+const cmd = text.slice(1).toLowerCase()
 
 const comandosVentas = [
   'disney','actas','ado','adicionales','alimentos','autobus','boletos',
@@ -761,5 +767,6 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
