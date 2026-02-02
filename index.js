@@ -301,6 +301,7 @@ sock.ev.on('group-participants.update', async (update) => {
     const action = update.action
     const users = update.participants || []
     const db = getDB(id)
+    db.bye_on = db.bye_on ?? false
     const metadata = await sock.groupMetadata(id)
 
     for (const u of users) {
@@ -343,12 +344,27 @@ sock.ev.on('group-participants.update', async (update) => {
 }
 }
       // ===== BYE =====
-      if (action === 'remove' && typeof db.bye === 'string') {
-        await sock.sendMessage(id, {
-          text: `👋 @${jid.split('@')[0]} ${db.bye}`,
-          mentions: [jid]
-        })
-      }
+      if (action === 'remove' && db.bye_on) {
+  let byeText
+
+  if (typeof db.bye === 'string') {
+    // 🟡 BYE PERSONALIZADO (.setbye)
+    byeText = `👋 @${jid.split('@')[0]} ${db.bye}`
+  } else {
+    // 🟢 BYE POR DEFECTO
+    byeText = `
+👋 @${jid.split('@')[0]} salió del grupo
+
+😢 Esperamos verte pronto
+📌 Gracias por haber estado aquí
+    `.trim()
+  }
+
+  await sock.sendMessage(id, {
+    text: byeText,
+    mentions: [jid]
+  })
+}
     }
   } catch (err) {
     console.log('❌ Error Welcome/Bye:', err)
@@ -799,6 +815,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
