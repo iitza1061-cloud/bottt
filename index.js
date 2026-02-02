@@ -527,7 +527,7 @@ if (text.startsWith('.setbye ')) {
 
     if (text === '.menuadmins') {
   return sock.sendMessage(from, {
-    image: fs.readFileSync('./media/menuadmins.jpg'),
+    image: fs.readFileSync('./media/menu.jpg'),
     caption: MENU_ADMINS
   })
 }
@@ -822,6 +822,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
