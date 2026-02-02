@@ -307,20 +307,46 @@ const users = update.participants || []
 // ===== WELCOME =====
 if (action === 'add' && db.welcome_on) {
   const metadata = await sock.groupMetadata(id)
-  const texto = db.welcome || metadata.desc || '💛🐣 Bienvenido'
-for (const user of users) {
-    await sock.sendMessage(id,{
-      text: texto,
+
+  for (const user of users) {
+    let caption = ''
+
+    // 🟢 Welcome personalizado
+    if (typeof db.welcome === 'string') {
+      caption = `@${user.split('@')[0]} ${db.welcome}`
+    }
+    // 🟡 Welcome por defecto
+    else {
+      caption = `
+✨ ¡Bienvenido/a a ${metadata.subject}! ✨
+
+👋 Hola, @${user.split('@')[0]}!
+🎉 Ahora somos ${metadata.participants.length} miembros.
+📌 Por favor, lee la descripción y respeta las normas.
+
+💖 ¡Disfruta tu estancia!
+      `.trim()
+    }
+
+    // 📸 Foto del usuario
+    let foto = null
+    try {
+      foto = await sock.profilePictureUrl(user, 'image')
+    } catch {}
+
+    // 📤 Enviar mensaje
+    await sock.sendMessage(id, {
+      image: foto ? { url: foto } : undefined,
+      caption,
       mentions: [user]
     })
   }
 }
-
 // ===== BYE =====
-if (action === 'remove' && db.bye) {
+if (action === 'remove' && typeof db.bye === 'string') {
   for (const user of users) {
-    await sock.sendMessage(id,{
-      text: db.bye,
+    await sock.sendMessage(id, {
+      text: `👋 @${user.split('@')[0]} ${db.bye}`,
       mentions: [user]
     })
   }
@@ -767,6 +793,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
