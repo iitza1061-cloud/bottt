@@ -294,67 +294,58 @@ async function iniciarBot () {
   })
 
   sock.ev.on('creds.update', saveCreds)
-// ===== WELCOME EVENT =====
+// ===== WELCOME / BYE EVENT =====
 sock.ev.on('group-participants.update', async (update) => {
-  console.log('🔥 EVENTO PARTICIPANTS:', update)
-
   try {
-const id = update.id
-const action = update.action
-const users = update.participants || []
-  const db = getDB(id)
+    const id = update.id
+    const action = update.action
+    const users = update.participants || []
+    const db = getDB(id)
+    const metadata = await sock.groupMetadata(id)
 
-// ===== WELCOME =====
-if (action === 'add' && db.welcome_on) {
-  const metadata = await sock.groupMetadata(id)
+    for (const u of users) {
+      const jid = typeof u === 'string' ? u : u.id
 
-  for (const user of users) {
-    let caption = ''
+      // ===== WELCOME =====
+      if (action === 'add' && db.welcome_on) {
+        let text
 
-    // 🟢 Welcome personalizado
-    if (typeof db.welcome === 'string') {
-      caption = `@${user.split('@')[0]} ${db.welcome}`
-    }
-    // 🟡 Welcome por defecto
-    else {
-      caption = `
+        if (typeof db.welcome === 'string') {
+          text = `👋 @${jid.split('@')[0]} ${db.welcome}`
+        } else {
+          text = `
 ✨ ¡Bienvenido/a a ${metadata.subject}! ✨
 
-👋 Hola, @${user.split('@')[0]}!
-🎉 Ahora somos ${metadata.participants.length} miembros.
-📌 Por favor, lee la descripción y respeta las normas.
+👋 Hola @${jid.split('@')[0]}
+🎉 Ahora somos ${metadata.participants.length} miembros
+📌 Lee la descripción del grupo
 
-💖 ¡Disfruta tu estancia!
-      `.trim()
+💛 ¡Disfruta tu estancia!
+          `.trim()
+        }
+
+        let foto
+        try {
+          foto = await sock.profilePictureUrl(jid, 'image')
+        } catch {}
+
+        await sock.sendMessage(id, {
+          image: foto ? { url: foto } : undefined,
+          caption: text,
+          mentions: [jid]
+        })
+      }
+
+      // ===== BYE =====
+      if (action === 'remove' && typeof db.bye === 'string') {
+        await sock.sendMessage(id, {
+          text: `👋 @${jid.split('@')[0]} ${db.bye}`,
+          mentions: [jid]
+        })
+      }
     }
-
-    // 📸 Foto del usuario
-    let foto = null
-    try {
-      foto = await sock.profilePictureUrl(user, 'image')
-    } catch {}
-
-    // 📤 Enviar mensaje
-    await sock.sendMessage(id, {
-      image: foto ? { url: foto } : undefined,
-      caption,
-      mentions: [user]
-    })
-  }
-}
-// ===== BYE =====
-if (action === 'remove' && typeof db.bye === 'string') {
-  for (const user of users) {
-    await sock.sendMessage(id, {
-      text: `👋 @${user.split('@')[0]} ${db.bye}`,
-      mentions: [user]
-    })
-  }
-}
-
-
   } catch (err) {
-    console.log('❌ Error Welcome:', err)
+    console.log('❌ Error Welcome/Bye:', err)
   }
 })
 
@@ -793,6 +784,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
