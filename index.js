@@ -518,13 +518,20 @@ if (text.startsWith('.setbye ')) {
 }
     
     if (text === '.menu') {
-      await sock.sendMessage(from, { react: { text: '🐣', key: msg.key } })
-      return sock.sendMessage(from, { text: MENU_PRINCIPAL })
-    }
+  return sock.sendMessage(from, {
+    image: fs.readFileSync('./media/menu.jpg'),
+    caption: MENU_PRINCIPAL
+  })
+}
+
 
     if (text === '.menuadmins') {
-      return sock.sendMessage(from, { text: MENU_ADMINS })
-    }
+  return sock.sendMessage(from, {
+    image: fs.readFileSync('./media/menuadmins.jpg'),
+    caption: MENU_ADMINS
+  })
+}
+
 
     if (text === '.menuventas') {
       return sock.sendMessage(from, { text: MENU_VENTAS })
@@ -815,6 +822,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
