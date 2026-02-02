@@ -25,17 +25,17 @@ function saveDB(groupId, data) {
 
 // =================== MENÚS ===================
 const MENU_PRINCIPAL = `
-💛🌟🐣 *LYAN BOT* 🐣🌟💛
+🐧❄️ *LYAN BOT* ❄️🐧
 
 » 👋🏻 Bienvenido al *menuprincipal*
 Aquí encontrarás los comandos para mantener
 un total orden en tus *GRUPOS*
 
 ══════════════════════
-💛 MENÚS DISPONIBLES
+❄️ MENÚS DISPONIBLES
 ══════════════════════
 
-*╭┈┈⊰* 💛 PRINCIPAL 💛
+*╭┈┈⊰* 🌀 PRINCIPAL 🌀
 *┊* 🌟 *.menu*
 *┊* 🌟 *.menuadmins*
 *┊* 🌟 *.menuventas*
@@ -45,223 +45,223 @@ un total orden en tus *GRUPOS*
 *╰┈┈┈┈┈┈┈┈┈⊰*
 
 ══════════════════════
-💛 SISTEMA DE VENTAS
+❄️ SISTEMA DE VENTAS
 ══════════════════════
 Todos los productos se configuran con:
-💛 *.setcomando texto*
+❄️ *.setcomando texto*
 
 *╭┈┈⊰* 🌟 VENTAS 🌟
-*┊* 💛 *.disney*
-*┊* 💛 *.actas*
-*┊* 💛 *.seguidores*
-*┊* 💛 *.adicionales*
-*┊* 💛 *.alimentos*
-*┊* 💛 *.autobus*
-*┊* 💛 *.boletos*
-*┊* 💛 *.canva*
-*┊* 💛 *.certificados*
-*┊* 💛 *.citas*
-*┊* 💛 *.codigos*
-*┊* 💛 *.combo*
-*┊* 💛 *.combos2*
-*┊* 💛 *.combos3*
-*┊* 💛 *.combos4*
-*┊* 💛 *.combos5*
-*┊* 💛 *.constancias*
-*┊* 💛 *.diamantes*
-*┊* 💛 *.descuentos*
-*┊* 💛 *.dinamica*
-*┊* 💛 *.facturas*
-*┊* 💛 *.fichareportes*
-*┊* 💛 *.fragmentos*
-*┊* 💛 *.gamepass*
-*┊* 💛 *.hbo*
-*┊* 💛 *.imss*
-*┊* 💛 *.justificantes*
-*┊* 💛 *.linkreportes*
-*┊* 💛 *.linkcodigos*
-*┊* 💛 *.libros*
-*┊* 💛 *.lote*
-*┊* 💛 *.lotes*
-*┊* 💛 *.metodo*
-*┊* 💛 *.metodos*
-*┊* 💛 *.maxeo*
-*┊* 💛 *.numerovirtual*
-*┊* 💛 *.netflix*
-*┊* 💛 *.prime*
-*┊* 💛 *.pasesff*
-*┊* 💛 *.pago*
-*┊* 💛 *.pago2*
-*┊* 💛 *.pago3*
-*┊* 💛 *.pago4*
-*┊* 💛 *.pago5*
-*┊* 💛 *.paquete*
-*┊* 💛 *.paquete2*
-*┊* 💛 *.paquete3*
-*┊* 💛 *.paquete4*
-*┊* 💛 *.paquete5*
-*┊* 💛 *.pedrial*
-*┊* 💛 *.peliculas*
-*┊* 💛 *.promo*
-*┊* 💛 *.procesos*
-*┊* 💛 *.programas*
-*┊* 💛 *.promoday*
-*┊* 💛 *.preciosbot*
-*┊* 💛 *.rebote*
-*┊* 💛 *.recargas*
-*┊* 💛 *.recetas*
-*┊* 💛 *.reembolsos*
-*┊* 💛 *.reglas*
-*┊* 💛 *.reportes*
-*┊* 💛 *.rfc*
-*┊* 💛 *.robux*
-*┊* 💛 *.servicios*
-*┊* 💛 *.seguros*
-*┊* 💛 *.spotify*
-*┊* 💛 *.stock*
-*┊* 💛 *.stock2*
-*┊* 💛 *.stock3*
-*┊* 💛 *.stock4*
-*┊* 💛 *.stock5*
-*┊* 💛 *.stock6*
-*┊* 💛 *.stock7*
-*┊* 💛 *.stock8*
-*┊* 💛 *.stock9*
-*┊* 💛 *.stock10*
-*┊* 💛 *.shein*
-*┊* 💛 *.tanda*
-*┊* 💛 *.tramites*
-*┊* 💛 *.universidad*
-*┊* 💛 *.vigencia*
-*┊* 💛 *.vuelos*
-*┊* 💛 *.vix*
-*┊* 💛 *.universal*
-*┊* 💛 *.youtube*
-*┊* 💛 *.web*
+*┊* 🌀 *.disney*
+*┊* 🌀 *.actas*
+*┊* 🌀 *.seguidores*
+*┊* 🌀 *.adicionales*
+*┊* 🌀 *.alimentos*
+*┊* 🌀 *.autobus*
+*┊* 🌀 *.boletos*
+*┊* 🌀 *.canva*
+*┊* 🌀 *.certificados*
+*┊* 🌀 *.citas*
+*┊* 🌀 *.codigos*
+*┊* 🌀 *.combo*
+*┊* 🌀 *.combos2*
+*┊* 🌀 *.combos3*
+*┊* 🌀 *.combos4*
+*┊* 🌀 *.combos5*
+*┊* 🌀 *.constancias*
+*┊* 🌀 *.diamantes*
+*┊* 🌀 *.descuentos*
+*┊* 🌀 *.dinamica*
+*┊* 🌀 *.facturas*
+*┊* 🌀 *.fichareportes*
+*┊* 🌀 *.fragmentos*
+*┊* 🌀 *.gamepass*
+*┊* 🌀 *.hbo*
+*┊* 🌀 *.imss*
+*┊* 🌀 *.justificantes*
+*┊* 🌀 *.linkreportes*
+*┊* 🌀 *.linkcodigos*
+*┊* 🌀 *.libros*
+*┊* 🌀 *.lote*
+*┊* 🌀 *.lotes*
+*┊* 🌀 *.metodo*
+*┊* 🌀 *.metodos*
+*┊* 🌀 *.maxeo*
+*┊* 🌀 *.numerovirtual*
+*┊* 🌀 *.netflix*
+*┊* 🌀 *.prime*
+*┊* 🌀 *.pasesff*
+*┊* 🌀 *.pago*
+*┊* 🌀 *.pago2*
+*┊* 🌀 *.pago3*
+*┊* 🌀 *.pago4*
+*┊* 🌀 *.pago5*
+*┊* 🌀 *.paquete*
+*┊* 🌀 *.paquete2*
+*┊* 🌀 *.paquete3*
+*┊* 🌀 *.paquete4*
+*┊* 🌀 *.paquete5*
+*┊* 🌀 *.pedrial*
+*┊* 🌀 *.peliculas*
+*┊* 🌀 *.promo*
+*┊* 🌀 *.procesos*
+*┊* 🌀 *.programas*
+*┊* 🌀 *.promoday*
+*┊* 🌀 *.preciosbot*
+*┊* 🌀 *.rebote*
+*┊* 🌀 *.recargas*
+*┊* 🌀 *.recetas*
+*┊* 🌀 *.reembolsos*
+*┊* 🌀 *.reglas*
+*┊* 🌀 *.reportes*
+*┊* 🌀 *.rfc*
+*┊* 🌀 *.robux*
+*┊* 🌀 *.servicios*
+*┊* 🌀 *.seguros*
+*┊* 🌀 *.spotify*
+*┊* 🌀 *.stock*
+*┊* 🌀 *.stock2*
+*┊* 🌀 *.stock3*
+*┊* 🌀 *.stock4*
+*┊* 🌀 *.stock5*
+*┊* 🌀 *.stock6*
+*┊* 🌀 *.stock7*
+*┊* 🌀 *.stock8*
+*┊* 🌀 *.stock9*
+*┊* 🌀 *.stock10*
+*┊* 🌀 *.shein*
+*┊* 🌀 *.tanda*
+*┊* 🌀 *.tramites*
+*┊* 🌀 *.universidad*
+*┊* 🌀 *.vigencia*
+*┊* 🌀 *.vuelos*
+*┊* 🌀 *.vix*
+*┊* 🌀 *.universal*
+*┊* 🌀 *.youtube*
+*┊* 🌀 *.web*
 *╰┈┈┈┈┈┈┈┈┈⊰*
 
-💛🌟🐣 *LYAN BOT* — Ventas automáticas 24/7 🐣🌟💛
+🌀🌟🐧 *LYAN BOT* — Ventas automáticas 24/7 🐧🌟🌀
 `
 
 const MENU_ADMINS = `
-» 👋🏻 *Menu Admins* — LYAN BOT 🎀
+» 👋🏻 *Menu Admins* — LYAN BOT 🌀
 
-*╭┈┈⊰* 🎀 ADMINS 🎀
-*┊* 🎀 *.kick*
-*┊* 🎀 *.promote*
-*┊* 🎀 *.demote*
-*┊* 🎀 *.link*
-*┊* 🎀 *.todos*
-*┊* 🎀 *.notify*
-*┊* 🎀 *.grupo abrir*
-*┊* 🎀 *.grupo cerrar*
+*╭┈┈⊰* 🌀 ADMINS 🌀
+*┊* 🌀 *.kick*
+*┊* 🌀 *.promote*
+*┊* 🌀 *.demote*
+*┊* 🌀 *.link*
+*┊* 🌀 *.todos*
+*┊* 🌀 *.notify*
+*┊* 🌀 *.grupo abrir*
+*┊* 🌀 *.grupo cerrar*
 *╰┈┈⊈*
 `
 
 const MENU_VENTAS = `
-💛🌟🐣 *LYAN BOT* 🐣🌟💛
+🌀🌟🐧 *LYAN BOT* 🐧🌟🌀
 
 » 👋🏻 Bienvenido al *menuventas*
 Aquí podrás ver todos los productos disponibles
 
 *╭┈┈⊰* 🌟 PRODUCTOS 🌟
-*┊* 💛 *.disney*
-*┊* 💛 *.actas*
-*┊* 💛 *.seguidores*
-*┊* 💛 *.adicionales*
-*┊* 💛 *.alimentos*
-*┊* 💛 *.autobus*
-*┊* 💛 *.boletos*
-*┊* 💛 *.canva*
-*┊* 💛 *.certificados*
-*┊* 💛 *.citas*
-*┊* 💛 *.codigos*
-*┊* 💛 *.combo*
-*┊* 💛 *.combos2*
-*┊* 💛 *.combos3*
-*┊* 💛 *.combos4*
-*┊* 💛 *.combos5*
-*┊* 💛 *.constancias*
-*┊* 💛 *.diamantes*
-*┊* 💛 *.descuentos*
-*┊* 💛 *.dinamica*
-*┊* 💛 *.facturas*
-*┊* 💛 *.fichareportes*
-*┊* 💛 *.fragmentos*
-*┊* 💛 *.gamepass*
-*┊* 💛 *.hbo*
-*┊* 💛 *.imss*
-*┊* 💛 *.justificantes*
-*┊* 💛 *.linkreportes*
-*┊* 💛 *.linkcodigos*
-*┊* 💛 *.libros*
-*┊* 💛 *.lote*
-*┊* 💛 *.lotes*
-*┊* 💛 *.metodo*
-*┊* 💛 *.metodos*
-*┊* 💛 *.maxeo*
-*┊* 💛 *.numerovirtual*
-*┊* 💛 *.netflix*
-*┊* 💛 *.prime*
-*┊* 💛 *.pasesff*
-*┊* 💛 *.pago*
-*┊* 💛 *.pago2*
-*┊* 💛 *.pago3*
-*┊* 💛 *.pago4*
-*┊* 💛 *.pago5*
-*┊* 💛 *.paquete*
-*┊* 💛 *.paquete2*
-*┊* 💛 *.paquete3*
-*┊* 💛 *.paquete4*
-*┊* 💛 *.paquete5*
-*┊* 💛 *.pedrial*
-*┊* 💛 *.peliculas*
-*┊* 💛 *.promo*
-*┊* 💛 *.procesos*
-*┊* 💛 *.programas*
-*┊* 💛 *.promoday*
-*┊* 💛 *.preciosbot*
-*┊* 💛 *.rebote*
-*┊* 💛 *.recargas*
-*┊* 💛 *.recetas*
-*┊* 💛 *.reembolsos*
-*┊* 💛 *.reglas*
-*┊* 💛 *.reportes*
-*┊* 💛 *.rfc*
-*┊* 💛 *.robux*
-*┊* 💛 *.servicios*
-*┊* 💛 *.seguros*
-*┊* 💛 *.spotify*
-*┊* 💛 *.stock*
-*┊* 💛 *.stock2*
-*┊* 💛 *.stock3*
-*┊* 💛 *.stock4*
-*┊* 💛 *.stock5*
-*┊* 💛 *.stock6*
-*┊* 💛 *.stock7*
-*┊* 💛 *.stock8*
-*┊* 💛 *.stock9*
-*┊* 💛 *.stock10*
-*┊* 💛 *.shein*
-*┊* 💛 *.tanda*
-*┊* 💛 *.tramites*
-*┊* 💛 *.universidad*
-*┊* 💛 *.vigencia*
-*┊* 💛 *.vuelos*
-*┊* 💛 *.vix*
-*┊* 💛 *.universal*
-*┊* 💛 *.youtube*
+*┊* 🌀 *.disney*
+*┊* 🌀 *.actas*
+*┊* 🌀 *.seguidores*
+*┊* 🌀 *.adicionales*
+*┊* 🌀 *.alimentos*
+*┊* 🌀 *.autobus*
+*┊* 🌀 *.boletos*
+*┊* 🌀 *.canva*
+*┊* 🌀 *.certificados*
+*┊* 🌀 *.citas*
+*┊* 🌀 *.codigos*
+*┊* 🌀 *.combo*
+*┊* 🌀 *.combos2*
+*┊* 🌀 *.combos3*
+*┊* 🌀 *.combos4*
+*┊* 🌀 *.combos5*
+*┊* 🌀 *.constancias*
+*┊* 🌀 *.diamantes*
+*┊* 🌀 *.descuentos*
+*┊* 🌀 *.dinamica*
+*┊* 🌀 *.facturas*
+*┊* 🌀 *.fichareportes*
+*┊* 🌀 *.fragmentos*
+*┊* 🌀 *.gamepass*
+*┊* 🌀 *.hbo*
+*┊* 🌀 *.imss*
+*┊* 🌀 *.justificantes*
+*┊* 🌀 *.linkreportes*
+*┊* 🌀 *.linkcodigos*
+*┊* 🌀 *.libros*
+*┊* 🌀 *.lote*
+*┊* 🌀 *.lotes*
+*┊* 🌀 *.metodo*
+*┊* 🌀 *.metodos*
+*┊* 🌀 *.maxeo*
+*┊* 🌀 *.numerovirtual*
+*┊* 🌀 *.netflix*
+*┊* 🌀 *.prime*
+*┊* 🌀 *.pasesff*
+*┊* 🌀 *.pago*
+*┊* 🌀 *.pago2*
+*┊* 🌀 *.pago3*
+*┊* 🌀 *.pago4*
+*┊* 🌀 *.pago5*
+*┊* 🌀 *.paquete*
+*┊* 🌀 *.paquete2*
+*┊* 🌀 *.paquete3*
+*┊* 🌀 *.paquete4*
+*┊* 🌀 *.paquete5*
+*┊* 🌀 *.pedrial*
+*┊* 🌀 *.peliculas*
+*┊* 🌀 *.promo*
+*┊* 🌀 *.procesos*
+*┊* 🌀 *.programas*
+*┊* 🌀 *.promoday*
+*┊* 🌀 *.preciosbot*
+*┊* 🌀 *.rebote*
+*┊* 🌀 *.recargas*
+*┊* 🌀 *.recetas*
+*┊* 🌀 *.reembolsos*
+*┊* 🌀 *.reglas*
+*┊* 🌀 *.reportes*
+*┊* 🌀 *.rfc*
+*┊* 🌀 *.robux*
+*┊* 🌀 *.servicios*
+*┊* 🌀 *.seguros*
+*┊* 🌀 *.spotify*
+*┊* 🌀 *.stock*
+*┊* 🌀 *.stock2*
+*┊* 🌀 *.stock3*
+*┊* 🌀 *.stock4*
+*┊* 🌀 *.stock5*
+*┊* 🌀 *.stock6*
+*┊* 🌀 *.stock7*
+*┊* 🌀 *.stock8*
+*┊* 🌀 *.stock9*
+*┊* 🌀 *.stock10*
+*┊* 🌀 *.shein*
+*┊* 🌀 *.tanda*
+*┊* 🌀 *.tramites*
+*┊* 🌀 *.universidad*
+*┊* 🌀 *.vigencia*
+*┊* 🌀 *.vuelos*
+*┊* 🌀 *.vix*
+*┊* 🌀 *.universal*
+*┊* 🌀 *.youtube*
 *╰┈┈┈┈┈┈┈┈┈⊰*
 `
 
 const MENU_VENTAS2 = `
-» 👋🏻 *Menu Ventas 2* — LYAN BOT 💛
+» 👋🏻 *Menu Ventas 2* — LYAN BOT 🌀
 
 *╭┈┈⊰*
-*┊* 💛 *.lotesvix*
-*┊* 💛 *.lotesnetflix*
-*┊* 💛 *.lotesprime*
-*┊* 💛 *.lotesspotify*
+*┊* 🌀 *.lotesvix*
+*┊* 🌀 *.lotesnetflix*
+*┊* 🌀 *.lotesprime*
+*┊* 🌀 *.lotesspotify*
 *╰┈┈⊈*
 `
 function calcularMs(horaTexto) {
@@ -321,7 +321,7 @@ sock.ev.on('group-participants.update', async (update) => {
 🎉 Ahora somos ${metadata.participants.length} miembros
 📌 Lee la descripción del grupo
 
-💛 ¡Disfruta tu estancia!
+🌀 ¡Disfruta tu estancia!
           `.trim()
         }
 
@@ -476,28 +476,28 @@ if (text === '.unmute') {
     
 // ===== WELCOME ON / OFF =====
 if (text === '.on welcome') {
-  if (!isAdmin) return sock.sendMessage(from, { text: '💛 Solo admins 🐣' })
+  if (!isAdmin) return sock.sendMessage(from, { text: '🌀 Solo admins 🐧' })
   db.welcome_on = true
 saveDB(from, db)
-  return sock.sendMessage(from, { text: '💛🐣 Welcome ACTIVADO' })
+  return sock.sendMessage(from, { text: '🌀🐧 Welcome ACTIVADO' })
 }
 
 if (text === '.off welcome') {
-  if (!isAdmin) return sock.sendMessage(from, { text: '💛 Solo admins 🐣' })
+  if (!isAdmin) return sock.sendMessage(from, { text: '🌀 Solo admins 🐧' })
   db.welcome_on = false
 saveDB(from, db)
-  return sock.sendMessage(from, { text: '💛🐣 Welcome DESACTIVADO' })
+  return sock.sendMessage(from, { text: '🌀🐧 Welcome DESACTIVADO' })
 }
     // ===== BYE ON / OFF =====
 if (text === '.on bye') {
-  if (!isAdmin) return sock.sendMessage(from, { text: '💛 Solo admins 🐣' })
+  if (!isAdmin) return sock.sendMessage(from, { text: '🌀 Solo admins 🐧' })
   db.bye_on = true
   saveDB(from, db)
   return sock.sendMessage(from, { text: '👋 Bye ACTIVADO' })
 }
 
 if (text === '.off bye') {
-  if (!isAdmin) return sock.sendMessage(from, { text: '💛 Solo admins 🐣' })
+  if (!isAdmin) return sock.sendMessage(from, { text: '🌀 Solo admins 🐧' })
   db.bye_on = false
   saveDB(from, db)
   return sock.sendMessage(from, { text: '👋 Bye DESACTIVADO' })
@@ -507,14 +507,14 @@ if (text.startsWith('.setwelcome ')) {
   if (!isAdmin) return
   db.welcome = text.replace('.setwelcome','').trim()
   saveDB(from, db)
-  return sock.sendMessage(from,{ text:'🎀 Welcome actualizado' })
+  return sock.sendMessage(from,{ text:'🌀 Welcome actualizado' })
 }
     // ===== SET BYE =====
 if (text.startsWith('.setbye ')) {
   if (!isAdmin) return
   db.bye = text.replace('.setbye','').trim()
   saveDB(from, db)
-  return sock.sendMessage(from,{ text:'🎀 Bye actualizado' })
+  return sock.sendMessage(from,{ text:'🌀 Bye actualizado' })
 }
     
     if (text === '.menu') {
@@ -589,7 +589,7 @@ if (text === '.grupo abrir') {
 // ===== HORARIOS ABRIR / CERRAR =====
 if (text.startsWith('.abrir ') || text.startsWith('.cerrar ')) {
   if (!isAdmin) {
-    await sock.sendMessage(from, { text: '💛🐣 Solo admins pueden usar horarios' })
+    await sock.sendMessage(from, { text: '🌀🐧 Solo admins pueden usar horarios' })
     return
   }
 
@@ -622,7 +622,7 @@ const horaTexto = text.split(' ').slice(1).join('').trim()
   const tiempo = objetivo - ahora
 
   await sock.sendMessage(from, {
-    text: `⏰💛 El grupo se *${accion}rá* a las *${horaTexto}*`
+    text: `⏰🌀 El grupo se *${accion}rá* a las *${horaTexto}*`
   })
 
   setTimeout(async () => {
@@ -633,8 +633,8 @@ const horaTexto = text.split(' ').slice(1).join('').trim()
 
     await sock.sendMessage(from, {
       text: accion === 'abrir'
-        ? '🔓💛 Grupo ABIERTO automáticamente'
-        : '🔒💛 Grupo CERRADO automáticamente'
+        ? '🔓🌀 Grupo ABIERTO automáticamente'
+        : '🔒🌀 Grupo CERRADO automáticamente'
     })
   }, tiempo)
 
@@ -648,7 +648,7 @@ if (text === '.promote') {
     return sock.sendMessage(from,{ text:'❌ Menciona a alguien' })
   }
   await sock.groupParticipantsUpdate(from,[user],'promote')
-  return sock.sendMessage(from,{ text:'🎀 Usuario promovido a admin' })
+  return sock.sendMessage(from,{ text:'🌀 Usuario promovido a admin' })
 }
 
 // ===== DEMOTE =====
@@ -659,7 +659,7 @@ if (text === '.demote') {
     return sock.sendMessage(from,{ text:'❌ Menciona a alguien' })
   }
   await sock.groupParticipantsUpdate(from,[user],'demote')
-  return sock.sendMessage(from,{ text:'🎀 Admin removido' })
+  return sock.sendMessage(from,{ text:'🌀 Admin removido' })
 }
 
     
@@ -674,22 +674,22 @@ if (text.startsWith('.kick')) {
   }
 
   await sock.groupParticipantsUpdate(from,[user],'remove')
-  return sock.sendMessage(from,{ text:'💛🐣 Usuario expulsado correctamente' })
+  return sock.sendMessage(from,{ text:'🌀🐧 Usuario expulsado correctamente' })
 }
 
 
     if (text === '.ping') {
-      return sock.sendMessage(from, { text: '💛 LYAN BOT ACTIVO 💛' })
+      return sock.sendMessage(from, { text: '🌀 LYAN BOT ACTIVO 🌀' })
     }
 // ===== NOTIFICAR / .n =====
 if (text === '.n' || text.startsWith('.n ')) {
   if (!isAdmin) {
     return sock.sendMessage(from, {
-      text: '💛🐣 Solo administradores pueden usar .n'
+      text: '🌀🐧 Solo administradores pueden usar .n'
     })
   }
 
-  const mensaje = text.replace('.n', '').trim() || '💛🐣 Atención grupo'
+  const mensaje = text.replace('.n', '').trim() || '🌀🐧 Atención grupo'
   const mentions = participants.map(p => p.id)
 
   await sock.sendMessage(from, {
@@ -720,7 +720,7 @@ if (text === '.todos') {
     if (text.startsWith('.set')) {
   if (!isAdmin) {
     return sock.sendMessage(from, {
-      text: '💛🐣 Solo administradores pueden usar *.set*'
+      text: '🌀🐧 Solo administradores pueden usar *.set*'
     })
   }
 
@@ -737,7 +737,7 @@ if (text === '.todos') {
 saveDB(from, db)
 
   return sock.sendMessage(from, {
-    text: `💛🌟 *${name}* actualizado correctamente 🐣`
+    text: `🌀🌟 *${name}* actualizado correctamente 🐧`
   })
 }
 
@@ -765,7 +765,7 @@ if (text.startsWith('.') && comandosVentas.includes(cmd)) {
     return sock.sendMessage(from, { text: db[cmd] })
   } else {
     return sock.sendMessage(from, {
-      text: `💛 *${cmd}* no está configurado aún.\n👉 Usa *.set${cmd} texto*`
+      text: `🌀 *${cmd}* no está configurado aún.\n👉 Usa *.set${cmd} texto*`
     })
   }
 }
@@ -810,7 +810,7 @@ const express = require('express')
 const app = express()
 const PORT = process.env.PORT || 8080
 
-app.get('/', (_, res) => res.send('LYAN BOT ONLINE 💛🐣'))
+app.get('/', (_, res) => res.send('LYAN BOT ONLINE 🌀🐧'))
 app.listen(PORT, () =>
   console.log('🌐 Express vivo en puerto', PORT)
 )
@@ -822,6 +822,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
