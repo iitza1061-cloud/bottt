@@ -7,6 +7,7 @@ const {
 const P = require('pino')
 const fs = require('fs')
 const yts = require('yt-search')
+const groupCache = {}
 // =================== WHATSAPP PREMIUM TEXT ===================
 function waMsg(title, body, footer = 'LYAN BOT') {
   return `
@@ -450,7 +451,16 @@ db.muted = db.muted || []
 db.bye_on = db.bye_on ?? false
 
 // ===== INFO DEL GRUPO =====
-const metadata = await sock.groupMetadata(from)
+if (!groupCache[from]) {
+  try {
+    groupCache[from] = await sock.groupMetadata(from)
+  } catch (e) {
+    console.log('⚠️ Error metadata:', e?.data || e)
+    return
+  }
+}
+
+const metadata = groupCache[from]
 const participants = metadata.participants
 const sender = msg.key.participant || msg.key.remoteJid
 // 🔐 DETECTAR ADMIN CORRECTAMENTE (admin + creador)
@@ -918,9 +928,14 @@ if (text.startsWith('.play ')) {
   })
 
   try {
-    const res = await yts(query)
-    const video = res.videos[0]
+    const res = await yts.search(query)
+if (!res || !res.videos || !res.videos.length) {
+  return sock.sendMessage(from, {
+    text: '❌ No se encontraron resultados'
+  })
+}
 
+const video = res.videos[0]
     if (!video) {
       return sock.sendMessage(from, {
         text: '❌ No se encontraron resultados'
@@ -1135,6 +1150,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
