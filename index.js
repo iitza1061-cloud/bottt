@@ -5,7 +5,19 @@ const {
 } = require('@whiskeysockets/baileys')
 const P = require('pino')
 const fs = require('fs')
+// =================== WHATSAPP PREMIUM TEXT ===================
+function waMsg(title, body, footer = 'LYAN BOT') {
+  return `
+*${title}*
 
+> ${body
+    .trim()
+    .split('\n')
+    .join('\n> ')}
+
+_${footer}_
+`.trim()
+}
 // =================== CONFIG ===================
 function getDBPath(groupId) {
   return `./data/${groupId}.json`
@@ -40,8 +52,6 @@ un total orden en tus *GRUPOS*
 *┊* 🌟 *.menuadmins*
 *┊* 🌟 *.menuventas*
 *┊* 🌟 *.menuventas2*
-*┊* 🌟 *.menufreefire*
-*┊* 🌟 *.menustickers*
 *╰┈┈┈┈┈┈┈┈┈⊰*
 
 ══════════════════════
@@ -264,25 +274,7 @@ const MENU_VENTAS2 = `
 *┊* 🌀 *.lotesspotify*
 *╰┈┈⊈*
 `
-function calcularMs(horaTexto) {
-  const ahora = new Date()
-  const match = horaTexto.match(/(\d+)(am|pm)/i)
-  if (!match) return null
 
-  let hora = parseInt(match[1])
-  const periodo = match[2].toLowerCase()
-
-  if (periodo === 'pm' && hora !== 12) hora += 12
-  if (periodo === 'am' && hora === 12) hora = 0
-
-  const objetivo = new Date()
-  objetivo.setHours(hora, 0, 0, 0)
-
-  let ms = objetivo - ahora
-  if (ms < 0) ms += 24 * 60 * 60 * 1000
-
-  return ms
-}
 // =================== BOT ===================
 async function iniciarBot () {
   const { state, saveCreds } = await useMultiFileAuthState('auth')
@@ -294,6 +286,50 @@ async function iniciarBot () {
   })
 
   sock.ev.on('creds.update', saveCreds)
+  setInterval(async () => {
+  if (!fs.existsSync('./data')) fs.mkdirSync('./data')
+
+  const files = fs.readdirSync('./data')
+
+  for (const file of files) {
+    const groupId = file.replace('.json','')
+    const db = getDB(groupId)
+
+    if (!db.horario) continue
+    if (Date.now() < db.horario.time) continue
+
+    try {
+      await sock.groupSettingUpdate(
+        groupId,
+        db.horario.accion === 'abrir'
+          ? 'not_announcement'
+          : 'announcement'
+      )
+
+      const meta = await sock.groupMetadata(groupId)
+
+      await sock.sendMessage(groupId,{
+        text: `
+❄️ \`INFORMATIVO AUTOMÁTICO\` ❄️
+
+\`\`\`
+EL GRUPO SE HA
+${db.horario.accion === 'abrir' ? 'ABIERTO 🔓' : 'CERRADO 🔒'}
+AUTOMÁTICAMENTE
+
+${meta.subject}
+\`\`\`
+`.trim()
+      })
+
+      delete db.horario
+      saveDB(groupId, db)
+
+    } catch (err) {
+      console.log('❌ Error horario:', err)
+    }
+  }
+}, 30 * 1000)
 // ===== WELCOME / BYE EVENT =====
 sock.ev.on('group-participants.update', async (update) => {
   try {
@@ -314,15 +350,20 @@ sock.ev.on('group-participants.update', async (update) => {
         if (typeof db.welcome === 'string') {
           text = `👋 @${jid.split('@')[0]} ${db.welcome}`
         } else {
-          text = `
-✨ ¡Bienvenido/a a ${metadata.subject}! ✨
+         text = `
+❄️ \`BIENVENIDO/A\` ❄️
 
-👋 Hola @${jid.split('@')[0]}
-🎉 Ahora somos ${metadata.participants.length} miembros
-📌 Lee la descripción del grupo
+\`\`\`
+» @${jid.split('@')[0]}
+Ahora formas parte de:
 
-🌀 ¡Disfruta tu estancia!
-          `.trim()
+${metadata.subject}
+
+Miembros: ${metadata.participants.length}
+\`\`\`
+
+🌀 Disfruta tu estancia
+`.trim()
         }
 
         let foto
@@ -353,11 +394,17 @@ sock.ev.on('group-participants.update', async (update) => {
   } else {
     // 🟢 BYE POR DEFECTO
     byeText = `
-👋 @${jid.split('@')[0]} salió del grupo
+❄️ \`DESPEDIDA\` ❄️
 
-😢 Esperamos verte pronto
-📌 Gracias por haber estado aquí
-    `.trim()
+\`\`\`
+» @${jid.split('@')[0]}
+Salió del grupo
+
+${metadata.subject}
+\`\`\`
+
+🌀 Gracias por haber estado aquí
+`.trim()
   }
 
   await sock.sendMessage(id, {
@@ -479,14 +526,30 @@ if (text === '.on welcome') {
   if (!isAdmin) return sock.sendMessage(from, { text: '🌀 Solo admins 🐧' })
   db.welcome_on = true
 saveDB(from, db)
-  return sock.sendMessage(from, { text: '🌀🐧 Welcome ACTIVADO' })
+return sock.sendMessage(from,{
+  text: `
+❄️ \`\`\`CONFIGURACIÓN\`\`\` ❄️
+
+Sistema *Welcome* ACTIVADO
+
+🌀 ${metadata.subject}
+`.trim()
+})
 }
 
 if (text === '.off welcome') {
   if (!isAdmin) return sock.sendMessage(from, { text: '🌀 Solo admins 🐧' })
   db.welcome_on = false
 saveDB(from, db)
-  return sock.sendMessage(from, { text: '🌀🐧 Welcome DESACTIVADO' })
+return sock.sendMessage(from,{
+  text: `
+❄️ \`\`\`CONFIGURACIÓN\`\`\` ❄️
+
+Sistema *Welcome* DESACTIVADO
+
+🌀 ${metadata.subject}
+`.trim()
+})
 }
     // ===== BYE ON / OFF =====
 if (text === '.on bye') {
@@ -505,16 +568,34 @@ if (text === '.off bye') {
     // ===== SET WELCOME =====
 if (text.startsWith('.setwelcome ')) {
   if (!isAdmin) return
-  db.welcome = text.replace('.setwelcome','').trim()
-  saveDB(from, db)
-  return sock.sendMessage(from,{ text:'🌀 Welcome actualizado' })
+const value = text.replace('.setwelcome','').trim()
+if (!value) return sock.sendMessage(from,{ text:'❌ Escribe un mensaje válido' })
+db.welcome = value
+    saveDB(from, db)
+return sock.sendMessage(from, {
+  text: `
+❄️ \`\`\`SOLICITUD ACEPTADA\`\`\` ❄️
+
+*.setwelcome* actualizado correctamente
+
+🌀 ${metadata.subject}
+`.trim()
+})
 }
     // ===== SET BYE =====
 if (text.startsWith('.setbye ')) {
   if (!isAdmin) return
   db.bye = text.replace('.setbye','').trim()
   saveDB(from, db)
-  return sock.sendMessage(from,{ text:'🌀 Bye actualizado' })
+return sock.sendMessage(from, {
+  text: `
+❄️ \`\`\`SOLICITUD ACEPTADA\`\`\` ❄️
+
+*.setbye* actualizado correctamente
+
+🌀 ${metadata.subject}
+`.trim()
+})
 }
     
     if (text === '.menu') {
@@ -569,9 +650,22 @@ if (text === '.link' || text === '.damelink') {
   }
 
   await sock.groupSettingUpdate(from, 'announcement')
+      delete db.horario
+saveDB(from, db)
   return sock.sendMessage(from, {
-    text: '🔒 Grupo cerrado correctamente'
-  })
+  text: `
+❄️ \`INFORMATIVO\` ❄️
+
+\`\`\`
+» @${sender.split('@')[0]}
+HA CERRADO 🔒 EL GRUPO
+
+${metadata.subject}
+\`\`\`
+  `.trim(),
+  mentions: [sender]
+})
+
 }
 if (text === '.grupo abrir') {
   if (!isAdmin) {
@@ -581,9 +675,22 @@ if (text === '.grupo abrir') {
   }
 
   await sock.groupSettingUpdate(from, 'not_announcement')
+  delete db.horario
+saveDB(from, db)
   return sock.sendMessage(from, {
-    text: '🔓 Grupo abierto correctamente'
-  })
+  text: `
+❄️ \`INFORMATIVO\` ❄️
+
+\`\`\`
+» @${sender.split('@')[0]}
+HA ABIERTO 🔓 EL GRUPO
+
+${metadata.subject}
+\`\`\`
+  `.trim(),
+  mentions: [sender]
+})
+
 }
 // ===== GRUPO CON HORARIO =====
 // ===== HORARIOS ABRIR / CERRAR =====
@@ -612,31 +719,25 @@ const horaTexto = text.split(' ').slice(1).join('').trim()
     if (ampm.toLowerCase() === 'pm' && hora < 12) hora += 12
     if (ampm.toLowerCase() === 'am' && hora === 12) hora = 0
   }
-
-  const ahora = new Date()
-  const objetivo = new Date()
-  objetivo.setHours(hora, minutos, 0, 0)
-
+const ahora = new Date(
+  new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' })
+)
+  const objetivo = new Date(
+  new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' })
+)
+objetivo.setHours(hora, minutos, 0, 0)
   if (objetivo <= ahora) objetivo.setDate(objetivo.getDate() + 1)
 
-  const tiempo = objetivo - ahora
 
   await sock.sendMessage(from, {
     text: `⏰🌀 El grupo se *${accion}rá* a las *${horaTexto}*`
   })
 
-  setTimeout(async () => {
-    await sock.groupSettingUpdate(
-      from,
-      accion === 'abrir' ? 'not_announcement' : 'announcement'
-    )
-
-    await sock.sendMessage(from, {
-      text: accion === 'abrir'
-        ? '🔓🌀 Grupo ABIERTO automáticamente'
-        : '🔒🌀 Grupo CERRADO automáticamente'
-    })
-  }, tiempo)
+db.horario = {
+  accion,
+  time: objetivo.getTime()
+}
+saveDB(from, db)
 
   return
 }
@@ -679,8 +780,14 @@ if (text.startsWith('.kick')) {
 
 
     if (text === '.ping') {
-      return sock.sendMessage(from, { text: '🌀 LYAN BOT ACTIVO 🌀' })
-    }
+  return sock.sendMessage(from, {
+    text: waMsg(
+      '❄️ ESTADO ❄️',
+      'LYAN BOT activo y funcionando correctamente',
+      metadata.subject
+    )
+  })
+}
 // ===== NOTIFICAR / .n =====
 if (text === '.n' || text.startsWith('.n ')) {
   if (!isAdmin) {
@@ -737,8 +844,14 @@ if (text === '.todos') {
 saveDB(from, db)
 
   return sock.sendMessage(from, {
-    text: `🌀🌟 *${name}* actualizado correctamente 🐧`
-  })
+  text: `
+❄️ \`\`\`SOLICITUD ACEPTADA\`\`\` ❄️
+
+*.set${name}* actualizado correctamente
+
+🌀 ${metadata.subject}
+  `.trim()
+})
 }
 
 if (!text.startsWith('.')) return
@@ -762,10 +875,30 @@ const comandosVentas = [
 
 if (text.startsWith('.') && comandosVentas.includes(cmd)) {
   if (db[cmd]) {
-    return sock.sendMessage(from, { text: db[cmd] })
-  } else {
+  return sock.sendMessage(from, {
+    text: `
+❄️ \`${cmd.toUpperCase()}\` ❄️
+
+\`\`\`
+${db[cmd]}
+\`\`\`
+
+🌀 ${metadata.subject}
+`.trim()
+  })
+} else {
     return sock.sendMessage(from, {
-      text: `🌀 *${cmd}* no está configurado aún.\n👉 Usa *.set${cmd} texto*`
+      text: `
+❄️ \`\`\`SERVICIO NO CONFIGURADO\`\`\`
+
+*.${cmd}* aún no tiene información
+
+✏️ Usa:
+\`.set${cmd} texto\`
+
+🌀 ${metadata.subject}
+`.trim()
+
     })
   }
 }
@@ -822,6 +955,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
