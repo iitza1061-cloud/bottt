@@ -1009,6 +1009,7 @@ exec(
     fs.unlinkSync(path)
   }
 )
+  }
 
 // ===== PLAY VIDEO =====
 if (text === '.playvideo') {
@@ -1168,6 +1169,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
