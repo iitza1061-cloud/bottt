@@ -765,7 +765,8 @@ Ciudad de México 🇲🇽
 db.horario = {
   accion,
 time: objetivo.getTime() + 60000 // buffer de seguridad 1 min}
-saveDB(from, db)
+}
+  saveDB(from, db)
 
   return
 }
@@ -983,6 +984,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
