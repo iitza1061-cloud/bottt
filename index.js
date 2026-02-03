@@ -944,9 +944,9 @@ const video = res.videos[0]
 
     // Guardar último resultado para .playaudio / .playvideo
     db.lastPlay = {
-      url: video.url,
-      title: video.title
-    }
+  url: `https://www.youtube.com/watch?v=${video.videoId}`,
+  title: video.title
+}
     saveDB(from, db)
 
     return sock.sendMessage(from, {
@@ -1171,6 +1171,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
