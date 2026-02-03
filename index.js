@@ -903,6 +903,97 @@ if (text === '.n' || text.startsWith('.n ')) {
     mentions
   })
 }
+    // ===== PLAY MUSIC =====
+if (text.startsWith('.play ')) {
+  const query = text.replace('.play', '').trim()
+  if (!query) {
+    return sock.sendMessage(from, {
+      text: '❄️ Escribe el nombre de una canción\nEj: .play peso pluma'
+    })
+  }
+
+  await sock.sendMessage(from, {
+    text: '🔎 Buscando canción...'
+  })
+
+  try {
+    const res = await yts(query)
+    const video = res.videos[0]
+
+    if (!video) {
+      return sock.sendMessage(from, {
+        text: '❌ No se encontraron resultados'
+      })
+    }
+
+    // Guardar último resultado para .playaudio / .playvideo
+    db.lastPlay = {
+      url: video.url,
+      title: video.title
+    }
+    saveDB(from, db)
+
+    return sock.sendMessage(from, {
+      image: { url: video.thumbnail },
+      caption: `
+❄️ \`PLAY MUSIC\` ❄️
+
+🎧 *${video.title}*
+👤 ${video.author.name}
+⏱️ ${video.timestamp}
+
+🔗 ${video.url}
+
+🌀 Comandos disponibles:
+• *.playaudio*
+• *.playvideo*
+`.trim()
+    })
+
+  } catch (err) {
+    console.log(err)
+    return sock.sendMessage(from, {
+      text: '❌ Error al buscar la canción'
+    })
+  }
+}
+    // ===== PLAY AUDIO =====
+if (text === '.playaudio') {
+  if (!db.lastPlay) {
+    return sock.sendMessage(from, {
+      text: '❄️ Usa primero *.play nombre de la canción*'
+    })
+  }
+
+  return sock.sendMessage(from, {
+    text: `
+🎧 \`AUDIO DISPONIBLE\`
+
+🔗 ${db.lastPlay.url}
+
+🌀 Abre el enlace para escuchar
+`.trim()
+  })
+}
+
+// ===== PLAY VIDEO =====
+if (text === '.playvideo') {
+  if (!db.lastPlay) {
+    return sock.sendMessage(from, {
+      text: '❄️ Usa primero *.play nombre de la canción*'
+    })
+  }
+
+  return sock.sendMessage(from, {
+    text: `
+🎥 \`VIDEO DISPONIBLE\`
+
+🔗 ${db.lastPlay.url}
+
+🌀 Abre el enlace para ver
+`.trim()
+  })
+}
     // ===== TODOS =====
 if (text === '.todos') {
   if (!isAdmin) return
@@ -1043,6 +1134,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
