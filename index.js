@@ -973,7 +973,7 @@ const video = res.videos[0]
     })
   }
 }
-    // ===== PLAY AUDIO =====
+// ===== PLAY AUDIO (DESCARGA REAL) =====
 if (text === '.playaudio') {
   if (!db.lastPlay) {
     return sock.sendMessage(from, {
@@ -981,16 +981,33 @@ if (text === '.playaudio') {
     })
   }
 
-  return sock.sendMessage(from, {
-    text: `
-🎧 \`AUDIO DISPONIBLE\`
+  const { exec } = require('child_process')
+  const path = `./temp/${Date.now()}.mp3`
 
-🔗 ${db.lastPlay.url}
-
-🌀 Abre el enlace para escuchar
-`.trim()
+  await sock.sendMessage(from, {
+    text: '🎧 Descargando audio, espera un momento...'
   })
+
+  exec(
+    `yt-dlp -x --audio-format mp3 -o "${path}" "${db.lastPlay.url}"`,
+    async (err) => {
+      if (err) {
+        console.log(err)
+        return sock.sendMessage(from, {
+          text: '❌ Error al descargar el audio'
+        })
+      }
+
+      await sock.sendMessage(from, {
+        audio: fs.readFileSync(path),
+        mimetype: 'audio/mpeg'
+      })
+
+      fs.unlinkSync(path)
+    }
+  )
 }
+
 
 // ===== PLAY VIDEO =====
 if (text === '.playvideo') {
@@ -1150,6 +1167,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
