@@ -983,17 +983,19 @@ if (text === '.playaudio') {
 
   const { exec } = require('child_process')
 const fs = require('fs')
+
 if (!fs.existsSync('./temp')) {
   fs.mkdirSync('./temp')
 }
 const path = `./temp/${Date.now()}.mp3`
-
+console.log('▶️ DESCARGANDO:', db.lastPlay.url)
+console.log('▶️ GUARDANDO EN:', path)
 await sock.sendMessage(from, {
   text: '🎧 Descargando audio, espera un momento...'
 })
 
 exec(
-  `/usr/local/bin/yt-dlp -f ba -x --audio-format mp3 "${db.lastPlay.url}" -o "${path}"`,
+  `/usr/local/bin/yt-dlp --no-playlist --extract-audio --audio-format mp3 --audio-quality 0 --newline --ignore-errors "${db.lastPlay.url}" -o "${path}"`,
   async (err) => {
     if (err) {
       console.log('YT-DLP ERROR:', err)
@@ -1171,6 +1173,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
