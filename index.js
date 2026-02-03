@@ -983,7 +983,9 @@ if (text === '.playaudio') {
 
   const { exec } = require('child_process')
 const fs = require('fs')
-
+if (!fs.existsSync('./temp')) {
+  fs.mkdirSync('./temp')
+}
 const path = `./temp/${Date.now()}.mp3`
 
 await sock.sendMessage(from, {
@@ -1169,6 +1171,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
