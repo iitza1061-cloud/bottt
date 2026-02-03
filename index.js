@@ -6,6 +6,7 @@ const {
 } = require('@whiskeysockets/baileys')
 const P = require('pino')
 const fs = require('fs')
+const yts = require('yt-search')
 // =================== WHATSAPP PREMIUM TEXT ===================
 function waMsg(title, body, footer = 'LYAN BOT') {
   return `
@@ -1134,6 +1135,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
