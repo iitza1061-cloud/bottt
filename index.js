@@ -825,32 +825,56 @@ if (text.startsWith('.kick')) {
     )
   })
 }
-// ===== NOTIFICAR / .n =====
-if (text === '.n' || text.startsWith('.n ')) {
+// ===== NOTIFICAR / .n (TEXTO + IMAGEN + MEDIA) =====
+if (text === '.n' || text.startsWith('.n')) {
   if (!isAdmin) {
     return sock.sendMessage(from, {
       text: '🌀🐧 Solo administradores pueden usar .n'
     })
   }
 
-  const mensaje = text.replace('.n', '').trim() || '🌀🐧 Atención grupo'
+  const quoted = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
   const mentions = participants.map(p => p.id)
 
-  await sock.sendMessage(from, {
-    text: mensaje,
+  // 📝 Texto escrito después de .n
+  const mensaje =
+    text.replace('.n', '').trim() || undefined
+
+  // 📸 SI HAY MENSAJE RESPONDIDO (IMAGEN / VIDEO / AUDIO)
+  if (quoted) {
+    // 📷 IMAGEN
+    if (quoted.imageMessage) {
+      return sock.sendMessage(from, {
+        image: quoted.imageMessage,
+        caption: mensaje,
+        mentions
+      })
+    }
+
+    // 🎥 VIDEO
+    if (quoted.videoMessage) {
+      return sock.sendMessage(from, {
+        video: quoted.videoMessage,
+        caption: mensaje,
+        mentions
+      })
+    }
+
+    // 🎵 AUDIO
+    if (quoted.audioMessage) {
+      return sock.sendMessage(from, {
+        audio: quoted.audioMessage,
+        mimetype: 'audio/ogg; codecs=opus',
+        mentions
+      })
+    }
+  }
+
+  // 📝 SOLO TEXTO
+  return sock.sendMessage(from, {
+    text: mensaje || '🌀🐧 Atención grupo',
     mentions
   })
-  return
-}
-    // ===== NOTIFY / TAGALL =====
-if (text === '.notify' || text === '.tagall') {
-  if (!isAdmin) return
-  const mentions = participants.map(p => p.id)
-  await sock.sendMessage(from,{
-    text:'📣 Atención grupo',
-    mentions
-  })
-  return
 }
     // ===== TODOS =====
 if (text === '.todos') {
@@ -992,6 +1016,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
