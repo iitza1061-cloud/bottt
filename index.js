@@ -296,8 +296,7 @@ async function iniciarBot () {
     const db = getDB(groupId)
 
     if (!db.horario) continue
-    if (Date.now() < db.horario.time) continue
-
+if (new Date().getTime() < db.horario.time) continue
     try {
       await sock.groupSettingUpdate(
         groupId,
@@ -316,7 +315,8 @@ async function iniciarBot () {
 EL GRUPO SE HA
 ${db.horario.accion === 'abrir' ? 'ABIERTO 🔓' : 'CERRADO 🔒'}
 AUTOMÁTICAMENTE
-
+ACCION EJECUTADA POR:
+LYAN BOT 🌀
 ${meta.subject}
 \`\`\`
 `.trim()
@@ -719,19 +719,47 @@ const horaTexto = text.split(' ').slice(1).join('').trim()
     if (ampm.toLowerCase() === 'pm' && hora < 12) hora += 12
     if (ampm.toLowerCase() === 'am' && hora === 12) hora = 0
   }
-const ahora = new Date(
-  new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' })
-)
-  const objetivo = new Date(
-  new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' })
-)
-objetivo.setHours(hora, minutos, 0, 0)
-  if (objetivo <= ahora) objetivo.setDate(objetivo.getDate() + 1)
+// ⏰ Hora real de México (estable)
+const formatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/Mexico_City',
+  hour12: false,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit'
+})
 
+const parts = Object.fromEntries(
+  formatter.formatToParts(new Date()).map(p => [p.type, p.value])
+)
+
+const ahora = new Date(
+  `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}`
+)
+
+const objetivo = new Date(ahora)
+objetivo.setHours(hora, minutos, 0, 0)
+
+if (objetivo <= ahora) {
+  objetivo.setDate(objetivo.getDate() + 1)
+}
 
   await sock.sendMessage(from, {
-    text: `⏰🌀 El grupo se *${accion}rá* a las *${horaTexto}*`
-  })
+text: `
+❄️ \`HORARIO CONFIGURADO\` ❄️
+
+\`\`\`
+El grupo se ${accion}rá
+a las ${horaTexto}
+
+Zona horaria:
+Ciudad de México 🇲🇽
+\`\`\`
+
+🌀 ${metadata.subject}
+`.trim()  })
 
 db.horario = {
   accion,
@@ -955,6 +983,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
