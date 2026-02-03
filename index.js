@@ -989,8 +989,8 @@ if (text === '.playaudio') {
   })
 
   exec(
-    `yt-dlp -x --audio-format mp3 -o "${path}" "${db.lastPlay.url}"`,
-    async (err) => {
+  `/usr/local/bin/yt-dlp -x --audio-format mp3 -o "${path}" "${db.lastPlay.url}"`,
+  async (err) => {
       if (err) {
         console.log(err)
         return sock.sendMessage(from, {
@@ -1167,6 +1167,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
