@@ -1,7 +1,8 @@
 const {
   default: makeWASocket,
   useMultiFileAuthState,
-  DisconnectReason
+  DisconnectReason,
+  downloadContentFromMessage
 } = require('@whiskeysockets/baileys')
 const P = require('pino')
 const fs = require('fs')
@@ -825,49 +826,75 @@ if (text.startsWith('.kick')) {
     )
   })
 }
-// ===== NOTIFICAR / .n (TEXTO + IMAGEN + MEDIA) =====
-if (text === '.n' || text.startsWith('.n')) {
+// ===== NOTIFICAR / .n (MEDIA REAL FUNCIONAL) =====
+if (text === '.n' || text.startsWith('.n ')) {
   if (!isAdmin) {
     return sock.sendMessage(from, {
       text: '🌀🐧 Solo administradores pueden usar .n'
     })
   }
 
-  const quoted = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+  const mensaje = text.replace('.n', '').trim()
   const mentions = participants.map(p => p.id)
 
-  // 📝 Texto escrito después de .n
-  const mensaje =
-    text.replace('.n', '').trim() || undefined
+  const quoted =
+    msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
 
-  // 📸 SI HAY MENSAJE RESPONDIDO (IMAGEN / VIDEO / AUDIO)
-  if (quoted) {
-    // 📷 IMAGEN
-    if (quoted.imageMessage) {
-      return sock.sendMessage(from, {
-        image: quoted.imageMessage,
-        caption: mensaje,
-        mentions
-      })
+  // 📸 IMAGEN
+  if (quoted?.imageMessage) {
+    const stream = await downloadContentFromMessage(
+      quoted.imageMessage,
+      'image'
+    )
+
+    let buffer = Buffer.from([])
+    for await (const chunk of stream) {
+      buffer = Buffer.concat([buffer, chunk])
     }
 
-    // 🎥 VIDEO
-    if (quoted.videoMessage) {
-      return sock.sendMessage(from, {
-        video: quoted.videoMessage,
-        caption: mensaje,
-        mentions
-      })
+    return sock.sendMessage(from, {
+      image: buffer,
+      caption: mensaje || undefined,
+      mentions
+    })
+  }
+
+  // 🎥 VIDEO
+  if (quoted?.videoMessage) {
+    const stream = await downloadContentFromMessage(
+      quoted.videoMessage,
+      'video'
+    )
+
+    let buffer = Buffer.from([])
+    for await (const chunk of stream) {
+      buffer = Buffer.concat([buffer, chunk])
     }
 
-    // 🎵 AUDIO
-    if (quoted.audioMessage) {
-      return sock.sendMessage(from, {
-        audio: quoted.audioMessage,
-        mimetype: 'audio/ogg; codecs=opus',
-        mentions
-      })
+    return sock.sendMessage(from, {
+      video: buffer,
+      caption: mensaje || undefined,
+      mentions
+    })
+  }
+
+  // 🎵 AUDIO
+  if (quoted?.audioMessage) {
+    const stream = await downloadContentFromMessage(
+      quoted.audioMessage,
+      'audio'
+    )
+
+    let buffer = Buffer.from([])
+    for await (const chunk of stream) {
+      buffer = Buffer.concat([buffer, chunk])
     }
+
+    return sock.sendMessage(from, {
+      audio: buffer,
+      mimetype: 'audio/ogg; codecs=opus',
+      mentions
+    })
   }
 
   // 📝 SOLO TEXTO
@@ -1016,6 +1043,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
