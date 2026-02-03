@@ -982,32 +982,33 @@ if (text === '.playaudio') {
   }
 
   const { exec } = require('child_process')
-  const path = `./temp/${Date.now()}.mp3`
+const fs = require('fs')
 
-  await sock.sendMessage(from, {
-    text: '🎧 Descargando audio, espera un momento...'
-  })
+const path = `./temp/${Date.now()}.mp3`
 
-  exec(
-  `/usr/local/bin/yt-dlp -x --audio-format mp3 -o "${path}" "${db.lastPlay.url}"`,
+await sock.sendMessage(from, {
+  text: '🎧 Descargando audio, espera un momento...'
+})
+
+exec(
+  `/usr/local/bin/yt-dlp -f ba -x --audio-format mp3 "${db.lastPlay.url}" -o "${path}"`,
   async (err) => {
-      if (err) {
-        console.log(err)
-        return sock.sendMessage(from, {
-          text: '❌ Error al descargar el audio'
-        })
-      }
-
-      await sock.sendMessage(from, {
-        audio: fs.readFileSync(path),
-        mimetype: 'audio/mpeg'
+    if (err) {
+      console.log('YT-DLP ERROR:', err)
+      return sock.sendMessage(from, {
+        text: '❌ Error al descargar el audio'
       })
-
-      fs.unlinkSync(path)
     }
-  )
-}
 
+    // ✅ AQUÍ ya existe el archivo
+    await sock.sendMessage(from, {
+      audio: fs.readFileSync(path),
+      mimetype: 'audio/mpeg'
+    })
+
+    fs.unlinkSync(path)
+  }
+)
 
 // ===== PLAY VIDEO =====
 if (text === '.playvideo') {
@@ -1167,6 +1168,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
