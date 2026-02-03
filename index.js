@@ -296,14 +296,8 @@ async function iniciarBot () {
     const db = getDB(groupId)
 
     if (!db.horario) continue
-// ⏱️ Comparación exacta por minutos
-const ahora = new Date()
-const ahoraMinutos = ahora.getHours() * 60 + ahora.getMinutes()
-
-const objetivo = new Date(db.horario.time)
-const objetivoMinutos = objetivo.getHours() * 60 + objetivo.getMinutes()
-
-if (ahoraMinutos < objetivoMinutos) continue
+// ⏰ comparar por timestamp real
+if (Date.now() < db.horario.time) continue
   try {
       await sock.groupSettingUpdate(
         groupId,
@@ -990,6 +984,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
