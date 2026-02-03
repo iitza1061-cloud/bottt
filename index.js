@@ -296,8 +296,16 @@ async function iniciarBot () {
     const db = getDB(groupId)
 
     if (!db.horario) continue
-// ⏰ comparar por timestamp real
-if (Date.now() < db.horario.time) continue
+// 🕰️ Hora actual México
+const ahoraMX = new Date(
+  new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' })
+)
+
+// 🕰️ Hora objetivo guardada
+const objetivoMX = new Date(db.horario.time)
+
+// ⏳ Aún no es hora
+if (ahoraMX < objetivoMX) continue
   try {
       await sock.groupSettingUpdate(
         groupId,
@@ -984,6 +992,7 @@ process.on('unhandledRejection', err => {
   console.error('❌ unhandledRejection:', err)
 })
 iniciarBot()
+
 
 
 
